@@ -1,0 +1,66 @@
+name: Build Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Create xai-plus-openclaw.zip
+        run: |
+          zip -r xai-plus-openclaw.zip . \
+            -x '.git*' \
+            -x '.github*' \
+            -x '.*' \
+            -x '__MACOSX*' \
+            -x '*.DS_Store'
+
+      - name: Generate SHA256 checksum
+        run: |
+          sha256sum xai-plus-openclaw.zip > xai-plus-openclaw.zip.sha256
+          cat xai-plus-openclaw.zip.sha256
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: xAI Plus v${{ steps.get_version.outputs.VERSION }}
+          body: |
+            ## xAI Plus v${{ steps.get_version.outputs.VERSION }}
+
+            Comprehensive xAI skill for Claude Code.
+
+            ### Installation
+
+            Download `xai-plus-openclaw.zip` and extract to your skills directory.
+
+            ### Setup
+
+            ```bash
+            clawdbot config set skills.entries.xai-plus.apiKey "xai-YOUR-KEY"
+            ```
+
+            See [README.md](https://github.com/${{ github.repository }}/blob/main/README.md) for full documentation.
+
+            ### Verification
+
+            ```bash
+            sha256sum -c xai-plus-openclaw.zip.sha256
+            ```
+          files: |
+            xai-plus-openclaw.zip
+            xai-plus-openclaw.zip.sha256
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
