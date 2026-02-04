@@ -12,7 +12,7 @@ Just ask your OpenClaw bot to install xai-plus and it will handle it for you.
 
 ### Via ClawHub
 
-Install using your preferred package manager:
+xAI Plus is [available on ClawHub](https://clawhub.ai/mischasigtermans/xai-plus). Install using your preferred package manager:
 
 ```bash
 # npm
@@ -27,7 +27,13 @@ bunx clawhub@latest install xai-plus
 
 ### Manual Installation
 
-Download the latest release from the [GitHub releases page](https://github.com/mischasigtermans/openclaw-xai-plus/releases), extract the zip file to your OpenClaw skills directory.
+Download the [latest release](https://github.com/mischasigtermans/openclaw-xai-plus/releases), and optionally verify the checksum:
+
+```bash
+sha256sum -c xai-openclaw.zip.sha256
+```
+
+Extract the zip file to your OpenClaw skills directory.
 
 ## Configuration
 
